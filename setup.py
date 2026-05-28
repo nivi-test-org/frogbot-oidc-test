@@ -8,7 +8,7 @@ setup(
         'requests==2.28.0',
         'flask==2.0.1',
         'Werkzeug==2.0.1',
-        'PyYAML==5.3.1',
-        'Pillow==9.0.0',
+        'PyYAML==6.0.1',
+        'Pillow==10.3.0',
     ],
 )
