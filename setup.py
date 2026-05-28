@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'requests==2.28.0',
-        'flask==2.0.1',
+        'flask==3.1.3',
         'Werkzeug==2.0.1',
         'PyYAML==6.0.1',
         'Pillow==10.3.0',
