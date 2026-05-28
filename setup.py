@@ -9,6 +9,6 @@ setup(
         'flask==2.0.1',
         'Werkzeug==2.0.1',
         'PyYAML==6.0.1',
-        'Pillow==10.3.0',
+        'pillow==12.2.0',
     ],
 )
