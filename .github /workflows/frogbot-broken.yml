@@ -1,0 +1,34 @@
+name: "Frogbot OIDC - BROKEN (Reproduces 403)"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  pull-requests: write
+  contents: write
+  id-token: write
+  security-events: write
+  actions: read
+
+jobs:
+  frogbot-scan:
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
+      JFROG_CLI_LOG_LEVEL: DEBUG
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: jfrog/frogbot@v2
+        env:
+          JF_URL: https://hts2.jfrog.io
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_DISABLE_ADVANCED_SECURITY: "TRUE"
+          JFROG_CLI_LOG_LEVEL: DEBUG
+          ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
+        with:
+          oidc-provider-name: hts2-github-oidc
+          oidc-audience: https://hts2.jfrog.io
