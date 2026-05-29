@@ -27,4 +27,4 @@ jobs:
           JFROG_CLI_LOG_LEVEL: DEBUG
         with:
           oidc-provider-name: hts2-github-oidc
-          oidc-audience: https://hts2.jfrog.io
+          oidc-audience: https://hts2.jfrog.io[hts2.jfrog.io]
