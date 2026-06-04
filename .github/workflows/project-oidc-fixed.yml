@@ -30,7 +30,7 @@ jobs:
 
       - name: Upload artifact
         run: |
-          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/" \
+          jf rt upload "myapp-1.0.jar" "oidc-test/myapp/" \
             --build-name=$BUILD_NAME \
             --build-number=$BUILD_NUMBER \
             --project=$PROJECT_KEY
@@ -38,10 +38,10 @@ jobs:
 
       - name: Delete and recreate artifact
         run: |
-          jf rt del "oidctest-local/myapp/myapp-1.0.jar" \
+          jf rt del "oidc-test/myapp/myapp-1.0.jar" \
             --quiet \
             --project=$PROJECT_KEY
-          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/" \
+          jf rt upload "myapp-1.0.jar" "oidc-test/myapp/" \
             --build-name=$BUILD_NAME \
             --build-number=$BUILD_NUMBER \
             --project=$PROJECT_KEY
