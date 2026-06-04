@@ -1,0 +1,57 @@
+name: "Project OIDC - FIXED"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  artifact-publish:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_KEY: oidctest
+      BUILD_NAME: nivi-test-build
+      BUILD_NUMBER: ${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JFrog CLI with OIDC
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: https://hts2.jfrog.io
+        with:
+          oidc-provider-name: hts2-github-oidc
+
+      - name: Create dummy artifact
+        run: echo "test-artifact-v1.0" > myapp-1.0.jar
+
+      - name: Upload artifact
+        run: |
+          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/" \
+            --build-name=$BUILD_NAME \
+            --build-number=$BUILD_NUMBER \
+            --project=$PROJECT_KEY
+        # ^^^ --project flag tells CLI to use project-scoped token correctly
+
+      - name: Delete and recreate artifact
+        run: |
+          jf rt del "oidctest-local/myapp/myapp-1.0.jar" \
+            --quiet \
+            --project=$PROJECT_KEY
+          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/" \
+            --build-name=$BUILD_NAME \
+            --build-number=$BUILD_NUMBER \
+            --project=$PROJECT_KEY
+
+
+      - name: Collect build info
+        run: |
+          jf rt build-add-git $BUILD_NAME $BUILD_NUMBER
+          jf rt build-collect-env $BUILD_NAME $BUILD_NUMBER
+
+      - name: Publish build info
+        run: |
+          jf rt build-publish $BUILD_NAME $BUILD_NUMBER \
+            --project=$PROJECT_KEY
