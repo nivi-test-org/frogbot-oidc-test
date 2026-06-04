@@ -23,6 +23,7 @@ jobs:
           JF_URL: https://hts2.jfrog.io
         with:
           oidc-provider-name: hts2-github-oidc
+          oidc-audience: https://hts2.jfrog.io
 
       - name: Create dummy artifact
         run: echo "test-artifact-v1.0" > myapp-1.0.jar
