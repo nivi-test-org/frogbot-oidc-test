@@ -1,0 +1,45 @@
+name: "Project OIDC - BROKEN (Reproduces 403)"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  artifact-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JFrog CLI with OIDC
+        uses: jfrog/setup-jfrog-cli@v4
+        env:
+          JF_URL: https://hts2.jfrog.io
+        with:
+          oidc-provider-name: hts2-github-oidc
+
+      - name: Create dummy artifact
+        run: echo "test-artifact-v1.0" > myapp-1.0.jar
+
+      - name: Upload artifact
+        run: |
+          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/"
+        # No --project flag — will 403 because token is project-scoped
+        # but CLI tries to operate at global scope
+
+      - name: Delete and recreate artifact
+        run: |
+          jf rt del "oidctest-local/myapp/myapp-1.0.jar" --quiet
+          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/"
+        # ^^^ This will 403 — no --project flag
+
+      - name: Collect build info
+        run: |
+          jf rt build-add-git
+          jf rt build-collect-env
+
+      - name: Publish build info
+        run: |
+          jf rt build-publish nivi-test-build 1.0
