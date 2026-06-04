@@ -25,15 +25,14 @@ jobs:
 
       - name: Upload artifact
         run: |
-          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/"
+          jf rt upload "myapp-1.0.jar" "oidc-test/myapp/"
         # No --project flag — will 403 because token is project-scoped
         # but CLI tries to operate at global scope
 
       - name: Delete and recreate artifact
         run: |
-          jf rt del "oidctest-local/myapp/myapp-1.0.jar" --quiet
-          jf rt upload "myapp-1.0.jar" "oidctest-local/myapp/"
-        # ^^^ This will 403 — no --project flag
+          jf rt del "oidc-test/myapp/myapp-1.0.jar" --quiet
+          jf rt upload "myapp-1.0.jar" "oidc-test/myapp/"
 
       - name: Collect build info
         run: |
